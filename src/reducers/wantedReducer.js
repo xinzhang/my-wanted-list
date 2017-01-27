@@ -13,6 +13,14 @@ export default function wantedReducer (state=[], action) {
     case types.ADD_PERSON:
       return [action.payload, ...state];
 
+    case types.UPDATE_PERSON:
+      return state.map( person => {
+        if (person.name == action.payload.name) {
+          return action.payload;
+        }
+        return person;
+      });
+
     default:
       return state;
   }

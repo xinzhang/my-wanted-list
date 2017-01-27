@@ -2,17 +2,51 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import deletePerson from '../actions/delete_person'
+import updatePerson from '../actions/update_person';
+import deletePerson from '../actions/delete_person';
+import {Note} from './Note';
 
 class WantedCard extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+          editReason: false,
+          reason: props.person.reason
+        };
+
     this.handleDeletePerson = this.handleDeletePerson.bind(this);
+
+    this.toggleEdit = this.toggleEdit.bind(this);
+    this.handleReasonChange = this.handleReasonChange.bind(this);
+    this.handleUpdatePerson = this.handleUpdatePerson.bind(this);
+
   }
 
   handleDeletePerson() {
     this.props.deletePerson(this.props.person);
   }
+
+  toggleEdit() {
+      this.setState({
+        editReason: !this.state.editReason
+      })
+    }
+    handleReasonChange(e) {
+      this.setState({
+        reason: e.target.value
+      });
+    }
+    handleUpdatePerson() {
+      const update = {
+        name: this.props.person.name,
+        image: this.props.person.image,
+        reward: this.props.person.reward,
+        reason: this.state.reason
+      }
+      this.props.updatePerson(update);
+      this.toggleEdit();
+    }
 
   render() {
     const person = this.props.person;
@@ -33,6 +67,17 @@ class WantedCard extends React.Component {
             </figure>
             <h4 className="card-title">{person.name}</h4>
         </div>
+
+        <Note
+          toggleEdit={this.toggleEdit}
+          updatePerson={this.handleUpdatePerson}
+          edit={this.state.editReason}
+          handleReasonChange={this.handleReasonChange}
+          content={this.state.reason} />
+          <small className="reward">
+            <span>Reward for capture:</span> {person.reward}
+          </small>
+
       </div>
     )
   }
@@ -41,7 +86,8 @@ class WantedCard extends React.Component {
 
 function mapDispatchToProps(dispatch) {
    return bindActionCreators({
-     deletePerson : deletePerson
+     deletePerson : deletePerson,
+     updatePerson: updatePerson,
    }, dispatch);
 }
 
