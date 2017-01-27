@@ -2,7 +2,7 @@ import * as types from './types';
 import axios from 'axios';
 import wantedApi from '../api/wantedApi';
 
-export function getWantedList() {
+export default function getWantedList() {
 
   // return dispatch => {
   //   return wantedApi.getAllWanted().then( wanted => {

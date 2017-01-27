@@ -10,6 +10,9 @@ export default function wantedReducer (state=[], action) {
     case types.DELETE_PERSON:
       return state.filter(person => person.name !== action.payload.name);
 
+    case types.ADD_PERSON:
+      return [action.payload, ...state];
+
     default:
       return state;
   }
