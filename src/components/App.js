@@ -1,21 +1,80 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-class App extends Component {
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {getWantedList} from '../actions/get_wanted_list';
+
+import LoadingSpinner from './LoadingSpinner';
+import WantedCard from './WantedCard';
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.toggleModalState = this.toggleModalState.bind(this);
+  }
+
+  toggleModalState() {
+  }
+
+  renderUsers() {
+      if(this.props.wantedPeople) {
+        return this.props.wantedPeople.map(person => {
+          return <WantedCard key={person.name} person={person} />;
+        });
+      } else {
+        return <LoadingSpinner />;
+      }
+  }
+
+  componentDidMount() {
+    this.props.getWantedList();
+  }
+
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+      <div className="App container">
+        <div className="card-container">
+          <div className="columns">
+            <div className="column col-md-6">
+              <h2>
+                Most Wanted:
+                <button
+                  className="btn btn-primary"
+                  onClick={this.toggleModalState}>Add</button>
+              </h2>
+              {this.renderUsers()}
+            </div>
+            <div className="column col-md-6">
+            </div>
+          </div>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
       </div>
     );
   }
+
 }
 
-export default App;
+ App.propTypes = {
+   wantedPeople: PropTypes.array.isRequired
+ };
+
+function mapStateToProps(state) {
+  return {
+    wantedPeople: state.wantedPeople
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  // return {
+  //   actions: bindActionCreators(getWantedList, dispatch);
+  // }
+   return bindActionCreators({
+     getWantedList : getWantedList
+   }, dispatch);
+
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

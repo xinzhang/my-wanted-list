@@ -12,7 +12,8 @@
     "react-redux": "^5.0.2",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
-    "spectre": "0.0.1"
+    "spectre": "0.0.1",
+    "spectre.css": "^0.1.32"
   },
   "scripts": {
     "start": "react-scripts start",
