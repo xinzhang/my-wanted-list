@@ -8,9 +8,12 @@ import LoadingSpinner from './LoadingSpinner';
 
 import getWantedList from '../actions/get_wanted_list';
 import addPerson from '../actions/add_person';
+import clearToast from '../actions/clear_toast';
 
 import WantedCard from './WantedCard';
 import AddUserModal from './AddUserModal'
+
+import Toast from './Toast';
 
 class App extends React.Component {
   constructor(props) {
@@ -37,6 +40,7 @@ class App extends React.Component {
     this.handleSkinChange = this.handleSkinChange.bind(this);
 
     this.handlePersonCreation = this.handlePersonCreation.bind(this);
+    this.handleClearToast = this.handleClearToast.bind(this);
   }
 
   toggleModalState() {
@@ -123,9 +127,18 @@ handlePersonCreation() {
     this.props.getWantedList();
   }
 
+  handleClearToast() {
+    this.props.clearToast();
+  }
+
   render() {
     return (
       <div className="App container">
+        {this.props.toast
+        ? <Toast
+            dismiss={this.handleClearToast}
+            message={this.props.toast} />
+        : null}
         <div className="card-container">
           <div className="columns">
             <div className="column col-md-6">
@@ -177,7 +190,8 @@ handlePersonCreation() {
 
 function mapStateToProps(state) {
   return {
-    wantedPeople: state.wantedPeople
+    wantedPeople: state.wantedPeople,
+    toast: state.toast
   };
 }
 
@@ -187,7 +201,8 @@ function mapDispatchToProps(dispatch) {
   // }
    return bindActionCreators({
      getWantedList : getWantedList,
-     addPerson: addPerson
+     addPerson: addPerson,
+     clearToast: clearToast
    }, dispatch);
 
 }
